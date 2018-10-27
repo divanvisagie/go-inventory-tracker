@@ -6,9 +6,16 @@ import (
 
 	"github.com/divanvisagie/go-inventory-tracker/models"
 	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-pg/pg"
 )
+
+// Item model for postgres
+
+const username = "postgres"
+const password = "secret"
+
+// Postgres end
 
 var itemsStore = make(map[int64]*models.Item)
 var lastID int64
@@ -20,44 +27,42 @@ func newItemID() int64 {
 }
 
 func addItem(item *models.Item) error {
-	if item == nil {
-		return errors.New(500, "item must be present")
-	}
+	db := pg.Connect(&pg.Options{
+		User:     username,
+		Password: password,
+	})
+	defer db.Close()
 
-	itemsLock.Lock()
-	defer itemsLock.Unlock()
-
-	newID := newItemID()
-	item.ID = newID
-	itemsStore[newID] = item
-
-	return nil
+	err := db.Insert(item)
+	return err
 }
 
 func deleteItem(id int64) error {
-	itemsLock.Lock()
-	defer itemsLock.Unlock()
+	db := pg.Connect(&pg.Options{
+		User:     username,
+		Password: password,
+	})
+	defer db.Close()
 
-	_, exists := itemsStore[id]
-	if !exists {
-		return errors.NotFound("not found: item %d", id)
-	}
-
-	delete(itemsStore, id)
-	return nil
+	item := &models.Item{ID: id}
+	err := db.Delete(item)
+	return err
 }
 
 func allItems(since int64, limit int64) (result []*models.Item) {
-	result = make([]*models.Item, 0)
-	for id, item := range itemsStore {
-		if len(result) >= int(limit) {
-			return
-		}
-		if since == 0 || id > since {
-			result = append(result, item)
-		}
+	db := pg.Connect(&pg.Options{
+		User:     username,
+		Password: password,
+	})
+	defer db.Close()
+
+	var items []*models.Item
+	err := db.Model(&items).Select()
+	if err != nil {
+		panic(err)
 	}
-	return
+
+	return items
 }
 
 // ItemService handles all the things that have to do with items
