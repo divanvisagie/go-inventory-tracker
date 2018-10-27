@@ -5,69 +5,19 @@ package restapi
 import (
 	"crypto/tls"
 	"net/http"
-	"sync"
-	"sync/atomic"
 
 	"github.com/divanvisagie/go-inventory-tracker/models"
 	"github.com/divanvisagie/go-inventory-tracker/restapi/operations"
 	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
+	"github.com/divanvisagie/go-inventory-tracker/services"
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
-var itemsStore = make(map[int64]*models.Item)
-var lastID int64
-
-var itemsLock = &sync.Mutex{}
-
-func newItemID() int64 {
-	return atomic.AddInt64(&lastID, 1)
-}
-
-func addItem(item *models.Item) error {
-	if item == nil {
-		return errors.New(500, "item must be present")
-	}
-
-	itemsLock.Lock()
-	defer itemsLock.Unlock()
-
-	newID := newItemID()
-	item.ID = newID
-	itemsStore[newID] = item
-
-	return nil
-}
-
-func deleteItem(id int64) error {
-	itemsLock.Lock()
-	defer itemsLock.Unlock()
-
-	_, exists := itemsStore[id]
-	if !exists {
-		return errors.NotFound("not found: item %d", id)
-	}
-
-	delete(itemsStore, id)
-	return nil
-}
-
-func allItems(since int64, limit int64) (result []*models.Item) {
-	result = make([]*models.Item, 0)
-	for id, item := range itemsStore {
-		if len(result) >= int(limit) {
-			return
-		}
-		if since == 0 || id > since {
-			result = append(result, item)
-		}
-	}
-	return
-}
-
 //go:generate swagger generate server --target .. --name InventoryTracker --spec ../swagger.yml
+var itemService = services.NewItemService()
 
 func configureFlags(api *operations.InventoryTrackerAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -91,26 +41,19 @@ func configureAPI(api *operations.InventoryTrackerAPI) http.Handler {
 	api.JSONProducer = runtime.JSONProducer()
 
 	api.ItemsGetHandler = items.GetHandlerFunc(func(params items.GetParams) middleware.Responder {
-		mergedParams := items.NewGetParams()
-		mergedParams.Since = swag.Int64(0)
-		if params.Since != nil {
-			mergedParams.Since = params.Since
-		}
-		if params.Limit != nil {
-			mergedParams.Limit = params.Limit
-		}
-		return items.NewGetOK().WithPayload(allItems(*mergedParams.Since, *mergedParams.Limit))
+		payload := itemService.Get(&params)
+		return items.NewGetOK().WithPayload(payload)
 	})
 
 	api.ItemsAddOneHandler = items.AddOneHandlerFunc(func(params items.AddOneParams) middleware.Responder {
-		if err := addItem(params.Body); err != nil {
+		if err := itemService.Add(params.Body); err != nil {
 			return items.NewAddOneDefault(500).WithPayload(&models.Error{Code: 500, Message: swag.String(err.Error())})
 		}
 		return items.NewAddOneCreated()
 	})
 
 	api.ItemsDestroyOneHandler = items.DestroyOneHandlerFunc(func(params items.DestroyOneParams) middleware.Responder {
-		if err := deleteItem(params.ID); err != nil {
+		if err := itemService.Remove(params.ID); err != nil {
 			return items.NewDestroyOneDefault(500).WithPayload(&models.Error{Code: 500, Message: swag.String(err.Error())})
 		}
 		return items.NewDestroyOneNoContent()
