@@ -7,14 +7,17 @@ import (
 	"github.com/go-pg/pg"
 )
 
-const username = "postgres"
-const password = "secret"
+func getDbConnection() *pg.DB {
+	db := pg.Connect(&pg.Options{
+		User:     "postgres",
+		Password: "secret",
+		Addr:     "postgresdb:5432",
+	})
+	return db
+}
 
 func addItem(item *models.Item) error {
-	db := pg.Connect(&pg.Options{
-		User:     username,
-		Password: password,
-	})
+	db := getDbConnection()
 	defer db.Close()
 
 	err := db.Insert(item)
@@ -22,10 +25,7 @@ func addItem(item *models.Item) error {
 }
 
 func deleteItem(id int64) error {
-	db := pg.Connect(&pg.Options{
-		User:     username,
-		Password: password,
-	})
+	db := getDbConnection()
 	defer db.Close()
 
 	item := &models.Item{ID: id}
@@ -34,10 +34,7 @@ func deleteItem(id int64) error {
 }
 
 func allItems(since int64, limit int64) (result []*models.Item) {
-	db := pg.Connect(&pg.Options{
-		User:     username,
-		Password: password,
-	})
+	db := getDbConnection()
 	defer db.Close()
 
 	var items []*models.Item

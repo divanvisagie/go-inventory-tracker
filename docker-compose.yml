@@ -16,3 +16,11 @@ services:
     depends_on:
       - postgresdb
     command: postgresdb 5432 postgres secret postgres
+
+  inventory-tracker:
+    build: .
+    container_name: inventory-tracker-server
+    volumes:
+      - .:/go/src/github.com/divanvisagie/go-inventory-tracker
+    ports:
+      - "8080:8080"
