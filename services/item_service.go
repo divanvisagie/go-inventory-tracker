@@ -1,30 +1,14 @@
 package services
 
 import (
-	"sync"
-	"sync/atomic"
-
 	"github.com/divanvisagie/go-inventory-tracker/models"
 	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
 	"github.com/go-openapi/swag"
 	"github.com/go-pg/pg"
 )
 
-// Item model for postgres
-
 const username = "postgres"
 const password = "secret"
-
-// Postgres end
-
-var itemsStore = make(map[int64]*models.Item)
-var lastID int64
-
-var itemsLock = &sync.Mutex{}
-
-func newItemID() int64 {
-	return atomic.AddInt64(&lastID, 1)
-}
 
 func addItem(item *models.Item) error {
 	db := pg.Connect(&pg.Options{
