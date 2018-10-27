@@ -1,0 +1,104 @@
+consumes:
+- application/json
+info:
+  description: Tracks items by adding and deleting them by name
+  title: An inventory tracking application
+  version: 1.0.0
+paths: {}
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
+definitions:
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+  item:
+    type: object
+    required: 
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      name:
+        type: string
+        minLength: 3
+      description:
+        type: string
+        minLength: 5
+      count:
+        type: integer
+        format: 1nt64
+paths:
+  /:
+    get:
+      tags:
+        - items
+      parameters:
+        - name: since
+          in: query
+          type: integer
+          format: int64
+        - name: limit
+          in: query
+          type: integer
+          format: int64
+          default: 20
+      responses:
+        200:
+          description: list the items in my inventory
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/item"
+        default:
+          description: generic error response
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      tags:
+        - items
+      operationId: addOne
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/item"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/item"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /{id}:
+    delete:
+      tags:
+        - items
+      operationId: destroyOne
+      parameters:
+        - type: integer
+          format: int64
+          name: id
+          in: path
+          required: true
+      responses:
+        204:
+          description: Deleted
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+      
