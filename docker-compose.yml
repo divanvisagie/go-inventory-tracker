@@ -18,9 +18,21 @@ services:
     command: postgresdb 5432 postgres secret postgres
 
   inventory-tracker:
-    build: .
+    build: 
+      context: ./server
     container_name: inventory-tracker-server
     volumes:
-      - .:/go/src/github.com/divanvisagie/go-inventory-tracker
+      - ./server:/go/src/github.com/divanvisagie/go-inventory-tracker
     ports:
       - "8080:8080"
+  
+  locust:
+    build:
+      context: ./load-testing
+    volumes:
+      - ./load-testing:/locust
+    ports:
+      - "8089:8089"
+
+    environment:
+      - ATTACKED_HOST=http://inventory-tracker:8080
