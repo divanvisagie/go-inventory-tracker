@@ -1,5 +1,4 @@
 main:
-	go install ./cmd/inventory-tracker-server
-	inventory-tracker-server --port=8080
+	docker-compose up
 docs:
 	swagger serve swagger.yml -F redoc
