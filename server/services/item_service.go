@@ -1,11 +1,19 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/divanvisagie/go-inventory-tracker/models"
 	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
 	"github.com/go-openapi/swag"
 	"github.com/go-pg/pg"
 )
+
+func logDBIssue(err error) {
+	if err != nil {
+		fmt.Errorf(">> Database Error %s", err.Error)
+	}
+}
 
 func getDbConnection() *pg.DB {
 	db := pg.Connect(&pg.Options{
@@ -40,7 +48,7 @@ func allItems(since int64, limit int64) (result []*models.Item) {
 	var items []*models.Item
 	err := db.Model(&items).Select()
 	if err != nil {
-		panic(err)
+		logDBIssue(err)
 	}
 
 	return items

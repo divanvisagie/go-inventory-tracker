@@ -10,5 +10,7 @@ RUN go get  -v
 RUN go get  github.com/canthefason/go-watcher
 RUN go install github.com/canthefason/go-watcher/cmd/watcher
 
-ENTRYPOINT  watcher --port=8080 --host="0.0.0.0" -run /go/src/github.com/divanvisagie/go-inventory-tracker/cmd/inventory-tracker-server -watch github.com/divanvisagie/go-inventory-tracker 
+EXPOSE 80
+
+ENTRYPOINT  watcher --port=80 --host="0.0.0.0" -run /go/src/github.com/divanvisagie/go-inventory-tracker/cmd/inventory-tracker-server -watch github.com/divanvisagie/go-inventory-tracker 
 
