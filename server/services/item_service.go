@@ -3,8 +3,8 @@ package services
 import (
 	"fmt"
 
-	"github.com/divanvisagie/go-inventory-tracker/models"
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
+	"github.com/divanvisagie/go-inventory-tracker/server/models"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations/items"
 	"github.com/go-openapi/swag"
 	"github.com/go-pg/pg"
 )

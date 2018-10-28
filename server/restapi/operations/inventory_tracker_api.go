@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations/items"
 	errors "github.com/go-openapi/errors"
 	loads "github.com/go-openapi/loads"
 	runtime "github.com/go-openapi/runtime"

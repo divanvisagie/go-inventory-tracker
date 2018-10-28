@@ -6,27 +6,25 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/divanvisagie/go-inventory-tracker/models"
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations"
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations/items"
-	"github.com/divanvisagie/go-inventory-tracker/services"
+	"github.com/divanvisagie/go-inventory-tracker/server/models"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations/items"
+	"github.com/divanvisagie/go-inventory-tracker/server/services"
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
-//go:generate swagger generate server --target .. --name InventoryTracker --spec ../swagger.yml
 var itemService = services.NewItemService()
+
+//go:generate swagger generate server --target .. --name InventoryTracker --spec ../swagger.yml
 
 func configureFlags(api *operations.InventoryTrackerAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
 func configureAPI(api *operations.InventoryTrackerAPI) http.Handler {
-
-	// the variables we need throughout our implementation
-
 	// configure the api here
 	api.ServeError = errors.ServeError
 

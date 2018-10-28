@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/divanvisagie/go-inventory-tracker/restapi"
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations"
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 )

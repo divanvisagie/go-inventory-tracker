@@ -8,7 +8,7 @@ package items
 import (
 	"net/http"
 
-	models "github.com/divanvisagie/go-inventory-tracker/models"
+	models "github.com/divanvisagie/go-inventory-tracker/server/models"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"

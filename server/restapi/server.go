@@ -20,7 +20,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/divanvisagie/go-inventory-tracker/restapi/operations"
+	"github.com/divanvisagie/go-inventory-tracker/server/restapi/operations"
 	"github.com/go-openapi/runtime/flagext"
 	"github.com/go-openapi/swag"
 	flags "github.com/jessevdk/go-flags"
