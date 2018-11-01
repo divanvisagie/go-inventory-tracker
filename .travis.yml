@@ -15,4 +15,4 @@ script:
 
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - test $TRAVIS_BRANCH == "master" && sh docker-publish.sh
+  - test $TRAVIS_BRANCH == "master" && ./docker-publish.sh
