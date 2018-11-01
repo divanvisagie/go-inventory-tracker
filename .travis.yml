@@ -16,3 +16,6 @@ script:
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - test $TRAVIS_BRANCH == "master" && docker push divanvisagie/go-inventory-tracker:latest
+  - test $TRAVIS_BRANCH == "master" && docker push divanvisagie/inventory-tracker-migrations:latest
+
+  

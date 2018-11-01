@@ -12,6 +12,7 @@ build:
 dockerize:
 	$(MAKE) build
 	docker build -t divanvisagie/go-inventory-tracker:latest .
+	docker build -t divanvisagie/inventory-tracker-migrations:latest -f migrations.Dockerfile .
 	$(MAKE) clean
 
 clean:
