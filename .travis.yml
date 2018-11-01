@@ -8,10 +8,10 @@ services:
   - docker
 
 script:
-  cd server/cmd/inventory-tracker-server
-  go get -v
-  cd ../../..
-  make dockerize
+  - cd server/cmd/inventory-tracker-server
+  - go get -v
+  - cd ../../..
+  - make dockerize
 
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
