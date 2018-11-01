@@ -1,9 +1,9 @@
 FROM alpine
 
 RUN mkdir -p /app
-COPY app /app
+COPY ./app /app/
 
-WORKDIR /app
+WORKDIR /app/
 
 EXPOSE 80
 
