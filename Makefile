@@ -11,7 +11,7 @@ build:
 
 dockerize:
 	$(MAKE) build
-	docker build -t divanvisagie/go-inventory-tracker .
+	docker build -t divanvisagie/go-inventory-tracker:latest .
 	$(MAKE) clean
 
 clean:
