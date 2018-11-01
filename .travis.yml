@@ -8,6 +8,9 @@ services:
   - docker
 
 script:
+  cd server/cmd/inventory-tracker-server
+  go get -v
+  cd ../../..
   make dockerize
 
 after_success:
