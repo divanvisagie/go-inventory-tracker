@@ -11,7 +11,9 @@ script:
   - cd server/cmd/inventory-tracker-server
   - go get -v
   - cd ../../..
-  - make dockerize
+  - docker build -t divanvisagie/go-inventory-tracker:latest .
+  - docker build -t divanvisagie/inventory-tracker-migrations:latest -f migrations.Dockerfile .
+  
 
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
