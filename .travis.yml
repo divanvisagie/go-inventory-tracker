@@ -14,5 +14,5 @@ script:
   - make dockerize
 
 after_success:
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - test $TRAVIS_BRANCH == "master" && docker push divanvisagie/go-inventory-tracker:latest
