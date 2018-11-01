@@ -11,6 +11,7 @@ script:
   - cd server/cmd/inventory-tracker-server
   - go get -v
   - cd ../../..
+  - make build
   - docker build -t divanvisagie/go-inventory-tracker:latest .
   - docker build -t divanvisagie/inventory-tracker-migrations:latest -f migrations.Dockerfile .
   
