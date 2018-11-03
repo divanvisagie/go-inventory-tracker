@@ -13,17 +13,6 @@ WORKDIR ${SOURCE_ROOT}
 
 RUN make build
 
-RUN ls
-
-# Final stage
-FROM golang:alpine
-ARG SOURCE_ROOT=/go/src/github.com/divanvisagie/go-inventory-tracker
-COPY --from=build-env ${SOURCE_ROOT} /app/goapp
-
-WORKDIR /app
-
-RUN ["chown", "-R", "daemon", "./goapp"]
-
 EXPOSE 80
 
 ENTRYPOINT ./goapp --port=80 --host="0.0.0.0"
