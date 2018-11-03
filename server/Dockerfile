@@ -22,6 +22,8 @@ COPY --from=build-env ${SOURCE_ROOT} /app/goapp
 
 WORKDIR /app
 
+RUN ["chown", "-R", "daemon", "./goapp"]
+
 EXPOSE 80
 
 ENTRYPOINT ./goapp --port=80 --host="0.0.0.0"
