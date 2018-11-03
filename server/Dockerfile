@@ -1,16 +1,27 @@
-FROM golang
-
+# Build stage
+FROM golang AS build-env
+ARG SOURCE_ROOT=/go/src/github.com/divanvisagie/go-inventory-tracker
 RUN mkdir -p /go/src/github.com/divanvisagie/go-inventory-tracker
 
-ADD . /go/src/github.com/divanvisagie/go-inventory-tracker
 
-WORKDIR /go/src/github.com/divanvisagie/go-inventory-tracker/server/cmd/inventory-tracker-server
+ADD . ${SOURCE_ROOT}
 
-RUN go get  -v 
-RUN go get  github.com/canthefason/go-watcher
-RUN go install github.com/canthefason/go-watcher/cmd/watcher
+WORKDIR ${SOURCE_ROOT}/server/cmd/inventory-tracker-server
+RUN go get -v
+
+WORKDIR ${SOURCE_ROOT}
+
+RUN make build
+
+RUN ls
+
+# Final stage
+FROM golang:alpine
+ARG SOURCE_ROOT=/go/src/github.com/divanvisagie/go-inventory-tracker
+COPY --from=build-env ${SOURCE_ROOT} /app/goapp
+
+WORKDIR /app
 
 EXPOSE 80
 
-ENTRYPOINT  watcher --port=80 --host="0.0.0.0" -run /go/src/github.com/divanvisagie/go-inventory-tracker/server/cmd/inventory-tracker-server -watch github.com/divanvisagie/go-inventory-tracker 
-
+ENTRYPOINT ./goapp --port=80 --host="0.0.0.0"

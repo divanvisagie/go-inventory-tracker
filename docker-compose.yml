@@ -20,7 +20,7 @@ services:
   inventory-tracker:
     build: 
       context: .
-      dockerfile: server/Dockerfile
+      dockerfile: server/dev.Dockerfile
     volumes:
       - ./server:/go/src/github.com/divanvisagie/go-inventory-tracker/server
 

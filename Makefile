@@ -7,13 +7,12 @@ generate:
 	cd server; swagger generate server -A inventory-tracker -f ./swagger.yml
 
 build:
-	env GOOS=linux GOARCH=amd64 go build -o app github.com/divanvisagie/go-inventory-tracker/server/cmd/inventory-tracker-server
+	go build -o goapp github.com/divanvisagie/go-inventory-tracker/server/cmd/inventory-tracker-server
 
 dockerize:
-	$(MAKE) build
-	docker build -t divanvisagie/go-inventory-tracker:latest .
+	docker build -t divanvisagie/go-inventory-tracker:latest  -f server/Dockerfile .
 	docker build -t divanvisagie/inventory-tracker-migrations:latest -f migrations.Dockerfile .
 
 clean:
 	rm -rf load-testing/__pycache__
-	rm app
+	rm goapp
