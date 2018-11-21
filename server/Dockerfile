@@ -1,5 +1,5 @@
 # Build stage
-FROM golang AS build-env
+FROM divanvisagie/go-swagger-base
 ARG SOURCE_ROOT=/go/src/github.com/divanvisagie/go-inventory-tracker
 RUN mkdir -p /go/src/github.com/divanvisagie/go-inventory-tracker
 
